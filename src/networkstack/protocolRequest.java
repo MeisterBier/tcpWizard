@@ -5,7 +5,9 @@ package networkstack;
 
 import common.Karte;
 
-public class protocolRequest {
+import java.io.Serializable;
+
+public class protocolRequest implements Serializable {
 
     final String methodType;
     private int spieler, meineSpielerNummer, runde, amZug, dealer, maxRunde;

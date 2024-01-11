@@ -1,6 +1,8 @@
 package common;
 
-public class Karte {
+import java.io.Serializable;
+
+public class Karte implements Serializable {
     public final int wert, farbe;
 
     public Karte(final int pWert, final int pFarbe) {
