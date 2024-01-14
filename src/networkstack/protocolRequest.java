@@ -3,7 +3,7 @@
 
 package networkstack;
 
-import common.Karte;
+import common.*;
 
 import java.io.Serializable;
 
