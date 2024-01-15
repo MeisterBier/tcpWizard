@@ -1,26 +1,37 @@
 package networkstack;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
+import common.Consts;
+
 public class connectionHandler {
+    private final PrintWriter textOut;
+    private final BufferedReader textIn;
     private final ObjectOutputStream objectOut;
     private final ObjectInputStream objectIn;
-    private final Socket socket;
+    private final Socket objectSocket;
+    private final Socket infoSocket;
 
     private boolean isRunning;
 
 
-    public connectionHandler(Socket s) throws IOException {
-        socket = s;
-        objectOut = new ObjectOutputStream(socket.getOutputStream());
-        objectIn = new ObjectInputStream(socket.getInputStream());
+    public connectionHandler(Socket oS, Socket iS) throws IOException {
+        objectSocket = oS;
+        infoSocket = iS;
+        objectOut = new ObjectOutputStream(objectSocket.getOutputStream());
+        objectIn = new ObjectInputStream(objectSocket.getInputStream());
+        textOut = new PrintWriter(infoSocket.getOutputStream(), true);
+        textIn = new BufferedReader(new InputStreamReader(infoSocket.getInputStream()));
+
         isRunning = true;
+        CrashListener listener = new CrashListener();
+        Thread crashListenerThread = new Thread(listener);
+        crashListenerThread.start();
+
     }
 
-    public boolean sendToClient(protocolRequest request){
+    public boolean sendToClient(screenWrapper request){
       if(isRunning) {
           try {
               objectOut.writeObject(request);
@@ -34,12 +45,23 @@ public class connectionHandler {
       else return false;
     }
 
+    private AnswerWrapper listen(){
+        if(!isRunning) return null;
+        try{
+            return (AnswerWrapper) objectIn.readObject();
+        } catch (Exception e){
+            crash();
+            return null;
+        }
+    }
+
+
     private void crash(){
         if(isRunning)
             try{
                   objectIn.close();
                   objectOut.close();
-                  if(!socket.isClosed())socket.close();
+                  if(!objectSocket.isClosed())objectSocket.close();
 
             } catch(Exception e){
                 //Do nothing
@@ -47,5 +69,32 @@ public class connectionHandler {
         isRunning = false;
     }
 
+    public void encClient(){
+        textOut.println(Consts.serverQuitMessage);
+        crash();
+    }
 
+    private class CrashListener implements Runnable{
+        public CrashListener(){
+
+        }
+
+        @Override
+        public void run(){
+            while(isRunning){
+                String input = "";
+                try {
+                    input = textIn.readLine();
+                } catch (IOException e) {
+                    crash();
+                }
+                if(input != null) {
+                    if(input.equals(Consts.clientQuitMessage)){
+                        playerDisconnect();
+                        crash();
+                    }
+                }
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ import common.*;
 
 import java.io.Serializable;
 
-public class protocolRequest implements Serializable {
+public class screenWrapper implements Serializable {
 
     final String methodType;
     private int spieler, meineSpielerNummer, runde, amZug, dealer, maxRunde;
@@ -21,7 +21,7 @@ public class protocolRequest implements Serializable {
 
 
 
-    public protocolRequest(int spieler,int meineSpielerNummer,  String[] namen, int[] punkte, int amZug, int dealer, int[] vorhergesagt, int[] gemacht, Karte[] hand, int runde, int maxRunde){
+    public screenWrapper(int spieler, int meineSpielerNummer, String[] namen, int[] punkte, int amZug, int dealer, int[] vorhergesagt, int[] gemacht, Karte[] hand, int runde, int maxRunde){
         this.spieler = spieler;
         this.meineSpielerNummer = meineSpielerNummer;
         this.namen = namen;
@@ -36,7 +36,7 @@ public class protocolRequest implements Serializable {
         this.methodType = "Phase1";
     }
 
-    public protocolRequest(int spieler, int meineSpielerNummer, String[] namen, int[] punkte, int amZug, int dealer, int[] vorhergesagt, int[] gemacht, Karte[] hand, int runde, int maxRunde, Karte trumph, Karte[] aufTisch){
+    public screenWrapper(int spieler, int meineSpielerNummer, String[] namen, int[] punkte, int amZug, int dealer, int[] vorhergesagt, int[] gemacht, Karte[] hand, int runde, int maxRunde, Karte trumph, Karte[] aufTisch){
         this.spieler = spieler;
         this.meineSpielerNummer = meineSpielerNummer;
         this.namen = namen;
