@@ -59,6 +59,9 @@ public class ConnectionHandler {
     private void crash(){
         if(isRunning)
             try{
+                  textIn.close();
+                  textOut.close();
+                  infoSocket.close();
                   objectIn.close();
                   objectOut.close();
                   if(!objectSocket.isClosed())objectSocket.close();
