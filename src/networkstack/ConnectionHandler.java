@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import common.Consts;
 
-public class connectionHandler {
+public class ConnectionHandler {
     private final PrintWriter textOut;
     private final BufferedReader textIn;
     private final ObjectOutputStream objectOut;
@@ -16,7 +16,7 @@ public class connectionHandler {
     private boolean isRunning;
 
 
-    public connectionHandler(Socket oS, Socket iS) throws IOException {
+    public ConnectionHandler(Socket oS, Socket iS) throws IOException {
         objectSocket = oS;
         infoSocket = iS;
         objectOut = new ObjectOutputStream(objectSocket.getOutputStream());
@@ -31,7 +31,7 @@ public class connectionHandler {
 
     }
 
-    public boolean sendToClient(screenWrapper request){
+    public boolean sendToClient(ScreenWrapper request){
       if(isRunning) {
           try {
               objectOut.writeObject(request);
@@ -45,7 +45,7 @@ public class connectionHandler {
       else return false;
     }
 
-    private AnswerWrapper listen(){
+    public AnswerWrapper listen(){
         if(!isRunning) return null;
         try{
             return (AnswerWrapper) objectIn.readObject();
@@ -69,7 +69,7 @@ public class connectionHandler {
         isRunning = false;
     }
 
-    public void encClient(){
+    public void endClient(){
         textOut.println(Consts.serverQuitMessage);
         crash();
     }
@@ -90,7 +90,6 @@ public class connectionHandler {
                 }
                 if(input != null) {
                     if(input.equals(Consts.clientQuitMessage)){
-                        playerDisconnect();
                         crash();
                     }
                 }
