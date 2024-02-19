@@ -12,4 +12,5 @@ public class Consts {
     static{
         systemClock = Clock.systemUTC();
     }
+    public static final boolean defaultLog = true;
 }

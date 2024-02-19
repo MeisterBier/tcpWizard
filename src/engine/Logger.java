@@ -9,11 +9,10 @@ import java.io.File;
 import java.time.LocalDateTime;
 
 public class Logger {
-    private final boolean fileLog;
     private PrintWriter logOutput;
-
+    private static Logger thisInstance;
     public Logger(boolean fileLog){
-        this.fileLog = fileLog;
+        thisInstance = this;
         if(fileLog){
             try {
                 File logFile = new File("log.txt");
@@ -36,6 +35,7 @@ public class Logger {
                 e.printStackTrace();
             }
         }
+
     }
 
     public static String timeAppend(String inputString){ //Fügt einen Zeitstempel vor einem String hinzu
@@ -49,5 +49,7 @@ public class Logger {
         logOutput.println(timeAppend(logString));
         logOutput.flush();
     }
-
+    public static Logger getInstance(){
+        return thisInstance;
+    }
 }
