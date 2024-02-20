@@ -2,10 +2,22 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class Wiz extends JFrame {
-    public Wiz() {
-        setTitle("Wizard - Layout Beispiel");
+import common.Karte;
+import networkstack.ScreenWrapper;
+
+
+public class Screen extends JFrame {
+    ScreenWrapper sw = new ScreenWrapper(0);
+    public ArrayList<Karte> hand= sw.getHand();
+    JButton btn1 = new JButton("1");
+    JButton btn2 = new JButton("2");
+    JButton btn3 = new JButton("3");
+    JButton btn4 = new JButton("4");
+    public Screen() {
+        System.out.println(hand);
+        setTitle("Wizard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
 
@@ -31,9 +43,12 @@ public class Wiz extends JFrame {
         rechterSplitPane.setTopComponent(obenBereich);
 
         // Unterer Bereich für Karten auf der Hand
-        JPanel untenBereich = new JPanel();
-        untenBereich.setBackground(Color.gray);
-        rechterSplitPane.setBottomComponent(untenBereich);
+        JPanel handBereich = new JPanel();
+        handBereich.setBackground(Color.gray);
+        handBereich.add(btn1); handBereich.add(btn2);
+        handBereich.add(btn3); handBereich.add(btn4);
+        handBereich.setLayout(new GridLayout(2,10));
+        rechterSplitPane.setBottomComponent(handBereich);
 
         // Einstellungen für den vertikalen Split im rechten Bereich
         rechterSplitPane.setDividerLocation(300); // Anfangsposition des Dividers
@@ -50,8 +65,14 @@ public class Wiz extends JFrame {
         setVisible(true);
     }
 
+    public void DisplayHand(){
+        for (int i = 0; i < hand.size(); i++){
+
+        }
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Wiz());
+        SwingUtilities.invokeLater(() -> new Screen());
     }
 }
 
