@@ -12,7 +12,7 @@ public class GameEngine {
     private boolean fileLog;
 
     public GameEngine() {
-
+        spielerList = new ArrayList<Spieler>();
     }
 
     public void initializeGame(boolean logToFile) {
@@ -21,7 +21,15 @@ public class GameEngine {
     }
 
     public static boolean gameFull() {
-        return (spielerList.size() <= 6);
+        return !(spielerList.size() <= 6);
+    }
+
+    public static boolean nameAvailiable(String name){
+        if(spielerList.isEmpty()) return true;
+        for(int i = 0; i<spielerList.size(); i++){
+            if(spielerList.get(i).getNickName().equalsIgnoreCase(name)) return false;
+        }
+        return true;
     }
 
 }

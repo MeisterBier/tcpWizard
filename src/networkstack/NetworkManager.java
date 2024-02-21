@@ -1,5 +1,7 @@
 package networkstack;
+import com.sun.security.ntlm.Client;
 import common.Consts;
+import engine.GameEngine;
 import engine.Logger;
 
 import java.io.BufferedReader;
@@ -29,17 +31,19 @@ public class NetworkManager {
     }
 
     private class ServerThread implements Runnable{
-        ServerSocket server;
-        private ServerThread(ServerSocket server){
+        private ServerSocket server, s1, s2;
+        private boolean succesfullRequest;
+
+        private ServerThread(ServerSocket server) {
             this.server = server;
+            succesfullRequest = false;
             Thread myThread = new Thread(this);
             myThread.start();
         }
 
         @Override
         public void run(){
-            while(isRunning){
-                try{
+            try{
                     Socket client = server.accept();
                     ServerThread st = new ServerThread(server);
                     Logger.getInstance().log("Connection established with " + client.getRemoteSocketAddress().toString());
@@ -51,23 +55,32 @@ public class NetworkManager {
                         loginMessage = in.readLine();
                         if(loginMessage != null){
                             if(!loginMessage.isEmpty()){
-                                ArrayList<String> loginCommand = (ArrayList<String>) Arrays.asList(loginMessage.split(";"));
+                                ArrayList<String> loginCommand = new ArrayList<String>( Arrays.asList(loginMessage.split(";")));
                                 out.println(generateLoginResponse(loginCommand));
                                 //Beendet die Verbindung
-                                requestProcessed = true;
-                                in.close();
-                                out.close();
-                                client.close();
+                                if(requestProcessed = true) {
+                                    in.close();
+                                    out.close();
+                                    client.close();
+                                    if (succesfullRequest) {
+                                        ClientConnector clientConnector = new ClientConnector(s1, s2);
+                                        Socket[] clientSockets = clientConnector.getSockets();
+                                        if (clientSockets != null) {
+                                            Logger.getInstance().log("Succesfully made connection with player \"" + loginCommand.get(1) + "\" at "  + clientSockets[0].getRemoteSocketAddress().toString());
+                                            //TODO Neuer Spieler Methode abrufen
+                                        }
+
+                                    }
+                                }
                                 //Hier endet der Thread
                             }
                         }
 
                     }
                 } catch (Exception e){
+                    e.printStackTrace();
                     //TODO: Handle
-
                 }
-            }
         }
 
         private String generateLoginResponse(ArrayList<String> loginCommand){
@@ -86,14 +99,116 @@ public class NetworkManager {
                 0: Verbindung abgelehnt, Anfrage nicht erkannt
                 2: Verbindung abgelehnt, Spiel voll
                 3: Verbindung abgelehnt, Name schon vergeben
-                4: Verbindung abgelehnt, falsche Version, jetz folgt in [1] die Version des Servers
+                4: Verbindung abgelehnt, falsche Version, jetzt folgt in [1] die Version des Servers
                 5: Verbindung abgelehnt, Name entspricht nicht den Regeln
              */
 
-            String response;
+            //Schaut, ob die Eingabe dem Protokoll entspricht.
+            try {
+                if (loginCommand.size() != 2) {
+                    return "0";
+                } else if (engine.GameEngine.gameFull()) {
+                    return "2";
+                } else if (Integer.parseInt(loginCommand.get(0)) != Consts.version) {
+                    return ("4;" + Consts.version);
+                } else if (loginCommand.get(1).contains(" ") | loginCommand.get(1).length() > Consts.nameLength) {
+                    return "5";
+                } else if (!GameEngine.nameAvailiable(loginCommand.get(1))) {
+                    return "3";
+                }
+            } catch (Exception e){
+                    Logger.getInstance().log("Login by player failed, unknown request." );
+                    return "0";
+            }
 
-            return response;
+            try {
+                s1 = new ServerSocket(0);
+                s2 = new ServerSocket(0);
+                Logger.getInstance().log("Trying to establish connections on Ports " + s1.getLocalPort() + "/" + s2.getLocalPort());
+                succesfullRequest = true;
+                return ("1;" + s1.getLocalPort() + ";" + s2.getLocalPort());
+            } catch (Exception e){
+                Logger.getInstance().log("Couldn't find two free ports");
+                return "0";
+           }
+
+
         }
 
     }
+    //This may or may not work :(
+    private class ClientConnector{
+
+        Socket[] sockets;
+        ServerSocket ss1, ss2;
+        ServerSocketWaiter[] serverSocketWaiters;
+        Thread thread1, thread2;
+        boolean isInterrupted;
+
+        private ClientConnector(ServerSocket ss1, ServerSocket ss2){
+            this.ss1 = ss1;
+            this.ss2 = ss2;
+            sockets = new Socket[2];
+            Arrays.fill(sockets, null);
+            serverSocketWaiters = new ServerSocketWaiter[2];
+            serverSocketWaiters[0] = new ServerSocketWaiter(ss1, 0, this);
+            serverSocketWaiters[1] = new ServerSocketWaiter(ss2, 1, this);
+        }
+        private Socket[] getSockets(){
+            thread1 = new Thread(serverSocketWaiters[0]);
+            thread2 = new Thread(serverSocketWaiters[1]);
+            thread1.start();
+            thread2.start();
+
+            while(sockets[0] == null || sockets[1] == null){
+                if(isInterrupted) return null;
+            }
+            forceStop();
+            return sockets;
+        }
+
+        private void setSockets(int index, Socket s){
+            sockets[index] = s;
+        }
+
+        private void forceStop(){
+                isInterrupted = true;
+                try {
+                    ss1.close();
+                }catch (Exception e){
+                 //Ignore
+                }
+                try {
+                    ss1.close();
+                }catch (Exception e){
+                //Ignore
+                }
+        }
+        private class ServerSocketWaiter implements Runnable{
+            ServerSocket ss;
+            int index;
+            ClientConnector chef;
+            ServerSocketWaiter(ServerSocket ss, int index, ClientConnector chef){
+                this.ss = ss;
+                this.index = index;
+                this.chef = chef;
+            }
+            @Override
+            public void run(){
+                try{
+                    Socket s = ss.accept();
+                    chef.setSockets(index, s);
+
+                } catch (Exception e){
+                    if(!isInterrupted) {
+                        Logger.getInstance().log("Exception while waiting for client to connect");
+                        isInterrupted = true;
+                        chef.forceStop();
+                    }
+                }
+            }
+        }
+
+    }
+
 }

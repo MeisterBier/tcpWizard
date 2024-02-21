@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Spieler implements Serializable {
     //Informationen über den Spieler
-    final String nickName;
+    private final String nickName;
     private int punkte;
     private int sticheVorhergesagt;
     private int sticheGemacht;
@@ -36,7 +36,9 @@ public class Spieler implements Serializable {
         return punkte;
     }
 
-
+    public String getNickName(){
+        return nickName;
+    }
     public int getSticheVorhergesagt() {
         return sticheVorhergesagt;
     }
