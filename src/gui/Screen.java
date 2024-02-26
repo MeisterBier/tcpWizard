@@ -9,12 +9,14 @@ import networkstack.ScreenWrapper;
 
 
 public class Screen extends JFrame {
+
+    public JButton[] buttons = new JButton[20];
     ScreenWrapper sw = new ScreenWrapper(0);
     public ArrayList<Karte> hand= sw.getHand();
-    JButton btn1 = new JButton("1");
-    JButton btn2 = new JButton("2");
-    JButton btn3 = new JButton("3");
-    JButton btn4 = new JButton("4");
+    JButton btn = new JButton();
+    JPanel handBereich = new JPanel();
+
+
     public Screen() {
         System.out.println(hand);
         setTitle("Wizard");
@@ -43,10 +45,11 @@ public class Screen extends JFrame {
         rechterSplitPane.setTopComponent(obenBereich);
 
         // Unterer Bereich für Karten auf der Hand
-        JPanel handBereich = new JPanel();
+
         handBereich.setBackground(Color.gray);
-        handBereich.add(btn1); handBereich.add(btn2);
-        handBereich.add(btn3); handBereich.add(btn4);
+        addBtns();
+        /*handBereich.add(btn1); handBereich.add(btn2);
+        handBereich.add(btn3); handBereich.add(btn4);*/
         handBereich.setLayout(new GridLayout(2,10));
         rechterSplitPane.setBottomComponent(handBereich);
 
@@ -67,10 +70,20 @@ public class Screen extends JFrame {
 
     public void DisplayHand(){
         for (int i = 0; i < hand.size(); i++){
-
+            btn.setText("1");
         }
     }
 
+    public void addBtns(){
+        for (int i = 0; i < buttons.length; i++){
+            btn.setOpaque(false);
+            btn.setContentAreaFilled(false);
+            btn.setBorderPainted(false);
+            buttons[i] = btn;
+            handBereich.add(buttons[i]);
+        }
+
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Screen());
     }

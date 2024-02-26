@@ -91,7 +91,7 @@ public class NetworkManager {
              */
 
             String response;
-
+            response = "";
             return response;
         }
 
