@@ -43,7 +43,8 @@ public class NetworkManager {
 
         @Override
         public void run(){
-            try{
+            if(isRunning) {
+                try {
                     Socket client = server.accept();
                     ServerThread st = new ServerThread(server);
                     Logger.getInstance().log("Connection established with " + client.getRemoteSocketAddress().toString());
@@ -51,14 +52,14 @@ public class NetworkManager {
                     PrintWriter out = new PrintWriter(client.getOutputStream(), true);
                     boolean requestProcessed = false;
                     String loginMessage;
-                    while(isRunning && !requestProcessed){
+                    while (isRunning && !requestProcessed) {
                         loginMessage = in.readLine();
-                        if(loginMessage != null){
-                            if(!loginMessage.isEmpty()){
-                                ArrayList<String> loginCommand = new ArrayList<String>( Arrays.asList(loginMessage.split(";")));
+                        if (loginMessage != null) {
+                            if (!loginMessage.isEmpty()) {
+                                ArrayList<String> loginCommand = new ArrayList<String>(Arrays.asList(loginMessage.split(";")));
                                 out.println(generateLoginResponse(loginCommand));
                                 //Beendet die Verbindung
-                                if(requestProcessed = true) {
+                                if (requestProcessed = true) {
                                     in.close();
                                     out.close();
                                     client.close();
@@ -66,7 +67,7 @@ public class NetworkManager {
                                         ClientConnector clientConnector = new ClientConnector(s1, s2);
                                         Socket[] clientSockets = clientConnector.getSockets();
                                         if (clientSockets != null) {
-                                            Logger.getInstance().log("Succesfully made connection with player \"" + loginCommand.get(1) + "\" at "  + clientSockets[0].getRemoteSocketAddress().toString());
+                                            Logger.getInstance().log("Succesfully made connection with player \"" + loginCommand.get(1) + "\" at " + clientSockets[0].getRemoteSocketAddress().toString());
                                             //TODO Neuer Spieler Methode abrufen
                                         }
 
@@ -77,17 +78,19 @@ public class NetworkManager {
                         }
 
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     //TODO: Handle
                 }
+            }
+
         }
 
         private String generateLoginResponse(ArrayList<String> loginCommand){
             /*
             Eingabe:
             Ein String mit mehreren Werten, getrennt von Semicoli:
-            [0] Version des Clients: ein Byte, correspondiert mit Consts.version
+            [0] Version des Clients: ein Byte, korrespondiert mit Consts.version
             [1] Spielername: ein String
 
 
@@ -101,12 +104,15 @@ public class NetworkManager {
                 3: Verbindung abgelehnt, Name schon vergeben
                 4: Verbindung abgelehnt, falsche Version, jetzt folgt in [1] die Version des Servers
                 5: Verbindung abgelehnt, Name entspricht nicht den Regeln
+                6: Verbindung abgelehnt, Spiel läuft schon
              */
 
             //Schaut, ob die Eingabe dem Protokoll entspricht.
             try {
                 if (loginCommand.size() != 2) {
                     return "0";
+                } else if(GameEngine.gameRunning()){
+                    return "6";
                 } else if (engine.GameEngine.gameFull()) {
                     return "2";
                 } else if (Integer.parseInt(loginCommand.get(0)) != Consts.version) {
@@ -117,7 +123,7 @@ public class NetworkManager {
                     return "3";
                 }
             } catch (Exception e){
-                    Logger.getInstance().log("Login by player failed, unknown request." );
+                    Logger.getInstance().log("Login by player failed, unknown Exception." );
                     return "0";
             }
 
@@ -137,6 +143,7 @@ public class NetworkManager {
 
     }
     //This may or may not work :(
+    //Update: It does :)
     private class ClientConnector{
 
         Socket[] sockets;
