@@ -9,10 +9,9 @@ import java.util.ArrayList;
 
 public class GameEngine {
     private static boolean gameStarted;
-    private int spielerAnzahl;
     private static ArrayList<Spieler> spielerList;
 
-    int maxRunde;
+    private int maxRunde, jetztRunde, werDealer, werAmZug;
     private static GameEngine currentGame;
 
     private static NetworkManager networkManager;
@@ -21,17 +20,31 @@ public class GameEngine {
         gameStarted = false;
         currentGame = this;
         spielerList = new ArrayList<Spieler>();
-        spielerAnzahl = 0;
 
         setupNetwork();
         waitforStart();
-        setUpGame();
+        maxRunde =( 50 / spielerList.size());
+        setUpNewRound();
+
+    }
+    private void setUpNewRound(){
+        jetztRunde++;
+        if(jetztRunde > 6) determineWinner();
+        else{
+            werDealer = 0;
+        }
+    }
+
+    private void determineWinner(){
 
     }
 
-    private void setUpGame(){
+    private int rechtsVon(int linkerSpieler){
+        if(++linkerSpieler >= spielerList.size()) return 0;
 
+        else return (linkerSpieler);
     }
+
 
     private void setupNetwork(){
         networkManager = new NetworkManager();
