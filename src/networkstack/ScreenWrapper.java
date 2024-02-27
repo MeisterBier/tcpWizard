@@ -11,11 +11,12 @@ import java.util.ArrayList;
 public class ScreenWrapper implements Serializable {
 
     //Variablen für eine Spielrunde
-    private int spielPhase;
+    private int spielPhase;  // 0=> Stiche werden vorhergesagt, 1 => Stiche werden gemacht
     private int runde;
     private int spielerDran;
     private ArrayList<Spieler> spieler;
     private ArrayList<Karte> hand;
+    private Karte trumph;
 
 
     //Variablen für die Popups
@@ -23,12 +24,13 @@ public class ScreenWrapper implements Serializable {
     private int popupType; //-1 => Ungültiger Zug, -2 => Stiche vorhersagen, i => Stiche vorhersagen (i nicht erlaubt)
 
     //Constructor für Spielrunden
-    public ScreenWrapper(int spielPhase, int runde, int spielerDran, ArrayList<Spieler> spieler, ArrayList<Karte> hand){
+    public ScreenWrapper(int spielPhase, int runde, int spielerDran, ArrayList<Spieler> spieler, ArrayList<Karte> hand, Karte trumph){
         this.spielPhase = spielPhase;
         this.runde = runde;
         this.spielerDran = spielerDran;
         this.spieler = spieler;
         this.hand = hand;
+        this.trumph = trumph;
     }
 
     //Constructor für Popups:
@@ -65,5 +67,9 @@ public class ScreenWrapper implements Serializable {
 
     public int getPopupType() {
         return popupType;
+    }
+
+    public Karte getTrumph() {
+        return trumph;
     }
 }
