@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import networkstack.ScreenWrapper;
 
 public class Screen extends JFrame {
 
+    Karte testCard = new Karte(2,4);
     public JButton[] buttons = new JButton[20];
     ScreenWrapper sw = new ScreenWrapper(0);
     public ArrayList<Karte> hand= sw.getHand();
@@ -48,8 +50,7 @@ public class Screen extends JFrame {
 
         handBereich.setBackground(Color.gray);
         addBtns();
-        /*handBereich.add(btn1); handBereich.add(btn2);
-        handBereich.add(btn3); handBereich.add(btn4);*/
+
         handBereich.setLayout(new GridLayout(2,10));
         rechterSplitPane.setBottomComponent(handBereich);
 
@@ -68,20 +69,26 @@ public class Screen extends JFrame {
         setVisible(true);
     }
 
-    public void DisplayHand(){
-        for (int i = 0; i < hand.size(); i++){
-            btn.setText("1");
-        }
-    }
+
 
     public void addBtns(){
         for (int i = 0; i < buttons.length; i++){
-            btn.setOpaque(false);
-            btn.setContentAreaFilled(false);
-            btn.setBorderPainted(false);
-            buttons[i] = btn;
+            buttons[i] = new JButton();
+            buttons[i].setOpaque(false);
+            buttons[i].setContentAreaFilled(false);
+            buttons[i].setBorderPainted(false);
             handBereich.add(buttons[i]);
+            System.out.println(buttons);
+
         }
+
+        for (int j = 0; j < 4; j++){
+            buttons[j].setOpaque(true);
+            buttons[j].setContentAreaFilled(true);
+            buttons[j].setBorderPainted(true);
+        }
+
+
 
     }
     public static void main(String[] args) {
