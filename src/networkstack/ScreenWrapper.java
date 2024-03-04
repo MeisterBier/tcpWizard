@@ -33,6 +33,15 @@ public class ScreenWrapper implements Serializable {
         this.trumph = trumph;
     }
 
+    public ScreenWrapper(){
+        isPopup=false;
+        hand = new ArrayList<Karte>();
+        ArrayList<Karte> deck = Karte.getShuffledDeck();
+        for(int i = 0; i<4; i++){
+            hand.add(deck.get(i));
+        }
+    }
+
     //Constructor für Popups:
     public ScreenWrapper(int popupType){
         this.isPopup = true;

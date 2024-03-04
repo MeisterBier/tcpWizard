@@ -69,8 +69,47 @@ public class Screen extends JFrame {
         setVisible(true);
     }
 
+    public void drawGUI(ScreenWrapper screenWrapper){
+        if(screenWrapper.isPopup()){
+            //TODO implementieren
+        }
+        else{
+            //Initialisiere die Hand
+            int i = 0;
+            for(Karte k: screenWrapper.getHand()){
+                setBtn(buttons[i], k.farbe, k.wert);
+                ++i;
+            }
 
+            //Initialisiere die Anderen Spieler
 
+            //Initialisiere den Tisch
+
+            //Initialisiere den Trumph
+        }
+    }
+    public void setBtn(JButton btn, int farbe, int wert){
+        System.out.println(farbe + "\t" + wert);
+        switch(farbe){
+            //0 - rot, 1 - gelb, 2- grün, 3 - blau
+            case 0:
+                btn.setBackground(Color.red);
+                break;
+            case 1:
+                btn.setBackground(Color.yellow);
+                break;
+            case 2:
+                btn.setBackground(Color.green);
+                break;
+            case 3:
+                btn.setBackground(Color.blue);
+                break;
+        }
+        btn.setText(Integer.toString(wert));
+        btn.setOpaque(true);
+        btn.setBorderPainted(true);
+        btn.setContentAreaFilled(true);
+    }
     public void addBtns(){
         for (int i = 0; i < buttons.length; i++){
             buttons[i] = new JButton();
@@ -81,12 +120,12 @@ public class Screen extends JFrame {
             System.out.println(buttons);
 
         }
-
-        for (int j = 0; j < 4; j++){
-            buttons[j].setOpaque(true);
-            buttons[j].setContentAreaFilled(true);
-            buttons[j].setBorderPainted(true);
-        }
+//        System.out.println(sw.getHand());
+//        for (int j = 0; j < 4; j++){
+//            buttons[j].setOpaque(true);
+//            buttons[j].setContentAreaFilled(true);
+//            buttons[j].setBorderPainted(true);
+//        }
 
 
 
