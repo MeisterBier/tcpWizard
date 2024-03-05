@@ -13,14 +13,11 @@ public class Screen extends JFrame {
 
     Karte testCard = new Karte(2,4);
     public JButton[] buttons = new JButton[20];
-    ScreenWrapper sw = new ScreenWrapper(0);
-    public ArrayList<Karte> hand= sw.getHand();
     JButton btn = new JButton();
     JPanel handBereich = new JPanel();
 
 
     public Screen() {
-        System.out.println(hand);
         setTitle("Wizard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -106,9 +103,25 @@ public class Screen extends JFrame {
                 break;
         }
         btn.setText(Integer.toString(wert));
+        if(wert == 14){
+            btn.setBackground(Color.white);
+            btn.setText("Whisard");
+        } else if (wert == 0){
+            btn.setBackground(Color.white);
+            btn.setText("Clown");
+        }
         btn.setOpaque(true);
         btn.setBorderPainted(true);
         btn.setContentAreaFilled(true);
+    }
+
+    void resetButtons(){
+        for(int i = 0; i< buttons.length; i++){
+            buttons[i].setOpaque(false);
+            buttons[i].setContentAreaFilled(false);
+            buttons[i].setBorderPainted(false);
+            buttons[i].setText("");
+        }
     }
     public void addBtns(){
         for (int i = 0; i < buttons.length; i++){

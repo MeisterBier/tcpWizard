@@ -35,9 +35,10 @@ public class ScreenWrapper implements Serializable {
 
     public ScreenWrapper(){
         isPopup=false;
+        int zufall = (int)(Math.random() * 21);
         hand = new ArrayList<Karte>();
         ArrayList<Karte> deck = Karte.getShuffledDeck();
-        for(int i = 0; i<4; i++){
+        for(int i = 0; i<zufall; i++){
             hand.add(deck.get(i));
         }
     }
