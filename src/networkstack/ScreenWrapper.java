@@ -5,6 +5,7 @@ package networkstack;
 
 import common.*;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -41,12 +42,21 @@ public class ScreenWrapper implements Serializable {
         for(int i = 0; i<zufall; i++){
             hand.add(deck.get(i));
         }
+
+
     }
 
     //Constructor für Popups:
     public ScreenWrapper(int popupType){
         this.isPopup = true;
         this.popupType = popupType;
+
+//        if (popupType == -1){
+//            JOptionPane.showInputDialog("Ungültiger Zug");
+//        }
+//        else if(popupType != 1){
+//            JOptionPane.showInputDialog("Stiche Vorhersagen von: " + (-popupType));
+//        }
     }
 
     //Getter für die Klassenvariablen

@@ -19,10 +19,15 @@ public class Debug {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            sw = new ScreenWrapper();
+            sw = new ScreenWrapper(randomNum());
             screen.resetButtons();
             screen.drawGUI(sw);
         }
+    }
+
+    public int randomNum(){
+        int randomNumber = (int) (Math.random() * (-21));
+        return randomNumber;
     }
     public static void main(String[] args) {
         Screen screen = new Screen();

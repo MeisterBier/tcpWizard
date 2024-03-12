@@ -85,6 +85,8 @@ public class Screen extends JFrame {
             //Initialisiere den Trumph
         }
     }
+
+
     public void setBtn(JButton btn, int farbe, int wert){
         System.out.println(farbe + "\t" + wert);
         switch(farbe){
@@ -113,6 +115,8 @@ public class Screen extends JFrame {
         btn.setOpaque(true);
         btn.setBorderPainted(true);
         btn.setContentAreaFilled(true);
+
+
     }
 
     void resetButtons(){
