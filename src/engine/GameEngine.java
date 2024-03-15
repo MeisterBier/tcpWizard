@@ -1,5 +1,6 @@
 package engine;
 
+import common.Karte;
 import common.Spieler;
 import networkstack.ConnectionHandler;
 import networkstack.NetworkManager;
@@ -10,28 +11,61 @@ import java.util.ArrayList;
 public class GameEngine {
     private static boolean gameStarted;
     private static ArrayList<Spieler> spielerList;
-
-    private int maxRunde, jetztRunde, werDealer, werAmZug;
+    private static Karte trumph;
+    private static int maxRunde, jetztRunde, werDealer, werAmZug;
     private static GameEngine currentGame;
+
 
     private static NetworkManager networkManager;
 
     public GameEngine() {
         gameStarted = false;
         currentGame = this;
+        jetztRunde = 0;
+        werDealer = 0;
+        werAmZug = 0;
         spielerList = new ArrayList<Spieler>();
 
         setupNetwork();
         waitforStart();
-        maxRunde =( 50 / spielerList.size());
+        maxRunde =( 60 / spielerList.size());
         setUpNewRound();
 
     }
     private void setUpNewRound(){
         jetztRunde++;
-        if(jetztRunde > 6) determineWinner();
+        if(jetztRunde > maxRunde) determineWinner();
         else{
-            werDealer = 0;
+            jetztRunde = werDealer = werAmZug = 0;
+            firstTurn();
+
+        }
+
+
+    }
+    private void firstTurn(){
+        turnSetup();
+    }
+
+    private void turnSetup(){
+        ArrayList<Karte> stapel = Karte.getShuffledDeck();
+
+
+        for (Spieler spieler : spielerList) {
+            spieler.setDeck(new ArrayList<Karte>());
+            for(int i = 0; i<jetztRunde; i++){
+               spieler.getDeck().add(stapel.remove(i));
+            }
+            if(jetztRunde == maxRunde) trumph = new Karte(-1,-1);
+            else{
+                Karte trumphKarte = stapel.remove(0);
+                if(trumphKarte.wert == 1){
+
+                } else if (trumphKarte.wert == 14) {
+
+                } else trumph = trumphKarte;
+            }
+
         }
     }
 

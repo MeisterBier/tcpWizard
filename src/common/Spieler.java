@@ -51,6 +51,14 @@ public class Spieler implements Serializable {
         return sticheGemacht;
     }
 
+    public void setDeck(ArrayList<Karte> deck){
+        this.deck = deck;
+    }
+
+    public ArrayList<Karte> getDeck(){
+        return deck;
+    }
+
     public void setSticheGemacht(int sticheGemacht) {
         this.sticheGemacht = sticheGemacht;
     }
