@@ -22,7 +22,7 @@ public class ScreenWrapper implements Serializable {
 
     //Variablen für die Popups
     private boolean isPopup;
-    private int popupType; //-1 => Ungültiger Zug, -2 => Stiche vorhersagen, i => Stiche vorhersagen (i nicht erlaubt)
+    private int popupType; //-7 => Ungültiger Zug, -8 => Stiche vorhersagen, i => Stiche vorhersagen (i nicht erlaubt) / -i => Spiel starten
 
     //Constructor für Spielrunden
     public ScreenWrapper(int spielPhase, int runde, int spielerDran, ArrayList<Spieler> spieler, ArrayList<Karte> hand, Karte trumph){
