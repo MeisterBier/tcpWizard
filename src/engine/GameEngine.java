@@ -9,7 +9,7 @@ import networkstack.ScreenWrapper;
 import java.util.ArrayList;
 
 public class GameEngine {
-    private static boolean gameStarted;
+    private static boolean gameStarted,trumphWizard,trumphNarr;
     private static ArrayList<Spieler> spielerList;
     private static Karte trumph;
     private static int maxRunde, jetztRunde, werDealer, werAmZug;
@@ -29,42 +29,38 @@ public class GameEngine {
         setupNetwork();
         waitforStart();
         maxRunde =( 60 / spielerList.size());
-        setUpNewRound();
+        newRound();
 
     }
-    private void setUpNewRound(){
+    private void newRound(){
         jetztRunde++;
         if(jetztRunde > maxRunde) determineWinner();
         else{
             jetztRunde = werDealer = werAmZug = 0;
-            firstTurn();
+            //Verteilt neue Karten
+            ArrayList<Karte> stapel = Karte.getShuffledDeck();
+            for (Spieler spieler : spielerList) {
+                spieler.setDeck(new ArrayList<Karte>());
+                for (int i = 0; i < jetztRunde; i++) {
+                    spieler.getDeck().add(stapel.remove(i));
+                }
+                if (jetztRunde == maxRunde) trumph = new Karte(-1, -1);
+                else {
+                    trumph = stapel.remove(0);
+                    if (trumph.wert == 1) trumphNarr = true;
+                    else if (trumph.wert == 14) trumphWizard = true;
+                }
+            }
+
+            getPredictions();
 
         }
 
 
     }
-    private void firstTurn(){
-        turnSetup();
-    }
 
-    private void turnSetup(){
-        ArrayList<Karte> stapel = Karte.getShuffledDeck();
-
-
-        for (Spieler spieler : spielerList) {
-            spieler.setDeck(new ArrayList<Karte>());
-            for(int i = 0; i<jetztRunde; i++){
-               spieler.getDeck().add(stapel.remove(i));
-            }
-            if(jetztRunde == maxRunde) trumph = new Karte(-1,-1);
-            else{
-                Karte trumphKarte = stapel.remove(0);
-                if(trumphKarte.wert == 1){
-
-                } else if (trumphKarte.wert == 14) {
-
-                } else trumph = trumphKarte;
-            }
+    private void getPredictions(){
+        for (Spieler spieler: spielerList) {
 
         }
     }
