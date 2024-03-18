@@ -12,7 +12,7 @@ public class Karte implements Serializable {
     static{
         ArrayList<Karte> deck = new ArrayList<>();
         for(int i = 0; i<4; i++){
-            for(int j = 0; i<15; i++){
+            for(int j = 0; j<15; j++){
                 deck.add(new Karte(j,i));
             }
         }

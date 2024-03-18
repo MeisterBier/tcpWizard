@@ -107,6 +107,7 @@ public class NetworkManager {
                 6: Verbindung abgelehnt, Spiel läuft schon
              */
 
+
             //Schaut, ob die Eingabe dem Protokoll entspricht.
             try {
                 if (loginCommand.size() != 2) {

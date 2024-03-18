@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -9,14 +10,14 @@ import networkstack.ScreenWrapper;
 
 
 public class Screen extends JFrame {
-    ScreenWrapper sw = new ScreenWrapper(0);
-    public ArrayList<Karte> hand= sw.getHand();
-    JButton btn1 = new JButton("1");
-    JButton btn2 = new JButton("2");
-    JButton btn3 = new JButton("3");
-    JButton btn4 = new JButton("4");
+
+    Karte testCard = new Karte(2,4);
+    public JButton[] buttons = new JButton[20];
+    JButton btn = new JButton();
+    JPanel handBereich = new JPanel();
+
+
     public Screen() {
-        System.out.println(hand);
         setTitle("Wizard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -43,10 +44,10 @@ public class Screen extends JFrame {
         rechterSplitPane.setTopComponent(obenBereich);
 
         // Unterer Bereich für Karten auf der Hand
-        JPanel handBereich = new JPanel();
+
         handBereich.setBackground(Color.gray);
-        handBereich.add(btn1); handBereich.add(btn2);
-        handBereich.add(btn3); handBereich.add(btn4);
+        addBtns();
+
         handBereich.setLayout(new GridLayout(2,10));
         rechterSplitPane.setBottomComponent(handBereich);
 
@@ -65,12 +66,87 @@ public class Screen extends JFrame {
         setVisible(true);
     }
 
-    public void DisplayHand(){
-        for (int i = 0; i < hand.size(); i++){
+    public void drawGUI(ScreenWrapper screenWrapper){
+        if(screenWrapper.isPopup()){
+            //TODO implementieren
+        }
+        else{
+            //Initialisiere die Hand
+            int i = 0;
+            for(Karte k: screenWrapper.getHand()){
+                setBtn(buttons[i], k.farbe, k.wert);
+                ++i;
+            }
 
+            //Initialisiere die Anderen Spieler
+
+            //Initialisiere den Tisch
+
+            //Initialisiere den Trumph
         }
     }
 
+
+    public void setBtn(JButton btn, int farbe, int wert){
+        System.out.println(farbe + "\t" + wert);
+        switch(farbe){
+            //0 - rot, 1 - gelb, 2- grün, 3 - blau
+            case 0:
+                btn.setBackground(Color.red);
+                break;
+            case 1:
+                btn.setBackground(Color.yellow);
+                break;
+            case 2:
+                btn.setBackground(Color.green);
+                break;
+            case 3:
+                btn.setBackground(Color.blue);
+                break;
+        }
+        btn.setText(Integer.toString(wert));
+        if(wert == 14){
+            btn.setBackground(Color.white);
+            btn.setText("Whisard");
+        } else if (wert == 0){
+            btn.setBackground(Color.white);
+            btn.setText("Clown");
+        }
+        btn.setOpaque(true);
+        btn.setBorderPainted(true);
+        btn.setContentAreaFilled(true);
+
+
+    }
+
+    void resetButtons(){
+        for(int i = 0; i< buttons.length; i++){
+            buttons[i].setOpaque(false);
+            buttons[i].setContentAreaFilled(false);
+            buttons[i].setBorderPainted(false);
+            buttons[i].setText("");
+        }
+    }
+    public void addBtns(){
+        for (int i = 0; i < buttons.length; i++){
+            buttons[i] = new JButton();
+            buttons[i].setOpaque(false);
+            buttons[i].setContentAreaFilled(false);
+            buttons[i].setBorderPainted(false);
+            handBereich.add(buttons[i]);
+            System.out.println(buttons);
+
+        }
+//        System.out.println(sw.getHand());
+//        for (int j = 0; j < 4; j++){
+//            buttons[j].setOpaque(true);
+//            buttons[j].setContentAreaFilled(true);
+//            buttons[j].setBorderPainted(true);
+//        }
+
+
+
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Screen());
     }
